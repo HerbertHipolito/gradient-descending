@@ -44,6 +44,7 @@ def generate_2d_graphic(dot_list,equation,symbols,equation_in_string,save_img=Fa
 
     plt.plot(x,[get_value( [i], equation, symbols) for i in x])
     plt.plot(dot_list,[get_value( i, equation, symbols) for i in dot_list],'xr')
+    plt.grid()
     plt.title(equation_in_string)
     if save_img: plt.savefig(f'img/2d.png')
     plt.show()
@@ -70,7 +71,9 @@ def generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img=Fa
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     ax.plot([i[0] for i in dot_list], [i[1] for i in dot_list], [get_value(i, equation, symbols) for i in dot_list], 'xr')
-    ax.plot_surface(x,y,z,cmap='coolwarm', alpha=0.6)
+    #ax.plot_surface(x,y,z,cmap='coolwarm', alpha=0.6)
+    ax.contour(x, y, z, 30, cmap='viridis', linestyles='solid')  # Níveis no plano Z = -1
+
     ax.set_title(equation_in_string)
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
