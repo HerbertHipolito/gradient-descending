@@ -37,6 +37,10 @@ def generate_error_graphic(error_list,equation_string):
     plt.grid()
     plt.show()
 
+def my_expression(x,y):
+    return 3*x**2+2*(y-3)**2
+#return -1/((x**2+y**2+1)**(1/2))+2.71**(-x**2-y**2)
+
 def generate_2d_graphic(dot_list,equation,symbols,equation_in_string,save_img=False,range_print=1):
 
     last_element = float(dot_list[-1][0])
@@ -58,21 +62,21 @@ def generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img=Fa
     y = np.linspace(last_element_y-range_print, last_element_y+range_print, len(dot_list))
     x, y = np.meshgrid(x, y)
 
-    #z = x**2 + y**2
-    def my_expression(x,y):
-        return 3*x**2+2*(y-3)**2
-
     z = my_expression(x,y)
 
     z_string = to_string(my_expression)
 
-    if z_string.split('return ')[-1] != equation_in_string: raise Exception('Equation in generate_3d_graphic not adjusted, change the equation in my_expression function ')
+    if z_string.split('return ')[-1] != equation_in_string:
+        print(z_string.split('return ')[-1])
+        print(equation_in_string)
+        raise Exception('Equation in generate_3d_graphic not adjusted, change the equation in my_expression function')
 
+    #3d graphic
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     ax.plot([i[0] for i in dot_list], [i[1] for i in dot_list], [get_value(i, equation, symbols) for i in dot_list], 'xr')
-    #ax.plot_surface(x,y,z,cmap='coolwarm', alpha=0.6)
-    ax.contour(x, y, z, 30, cmap='viridis', linestyles='solid')  # Níveis no plano Z = -1
+    ax.plot_surface(x,y,z,cmap='coolwarm', alpha=0.6)
+    #ax.contour(x, y, z, 30, cmap='viridis', linestyles='solid')  # Níveis no plano Z = -1
 
     ax.set_title(equation_in_string)
     ax.set_xlabel('X')
@@ -80,7 +84,52 @@ def generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img=Fa
     ax.set_zlabel('Z')
     ax.legend()
     if save_img: plt.savefig(f'img/3d.png')
+    plt.show()
 
+    """
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.plot([i[0] for i in dot_list], [i[1] for i in dot_list], 'xr')
+    #ax.plot_surface(x,y,z,cmap='coolwarm', alpha=0.6)
+    ax.contourf(x, y, z, 50, cmap='viridis', linestyles='solid')  
+
+    ax.set_title(equation_in_string)
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.legend()
+    if save_img: plt.savefig(f'img/3d_niveis.png')
+    plt.show()
+    """
+
+def generate_countour_line_graphic(dot_list,equation,symbols,equation_in_string,save_img=False,range_print=1): 
+    
+    last_element_x = float(dot_list[-1][0])
+    last_element_y = float(dot_list[-1][1])
+
+    x = np.linspace(last_element_x-range_print, last_element_x+range_print, len(dot_list))
+    y = np.linspace(last_element_y-range_print, last_element_y+range_print, len(dot_list))
+    x, y = np.meshgrid(x, y)
+
+    z = my_expression(x,y)
+
+    z_string = to_string(my_expression)
+
+    if z_string.split('return ')[-1] != equation_in_string:
+        print(z_string.split('return ')[-1])
+        print(equation_in_string)
+        raise Exception('Equation in generate_3d_graphic not adjusted, change the equation in my_expression function')
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.plot([i[0] for i in dot_list], [i[1] for i in dot_list], 'xr')
+    #ax.plot_surface(x,y,z,cmap='coolwarm', alpha=0.6)
+    ax.contourf(x, y, z, 50, cmap='viridis', linestyles='solid')  
+
+    ax.set_title(equation_in_string)
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.legend()
+    if save_img: plt.savefig(f'img/3d_niveis.png')
     plt.show()
 
 def product_vector(v1,v2):
