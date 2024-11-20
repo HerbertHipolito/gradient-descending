@@ -1,4 +1,4 @@
-from sympy import symbols, sympify
+from sympy import symbols, sympify, latex   
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
@@ -28,18 +28,19 @@ def get_value(values, equation, symbols):
 
     return equation.evalf(subs=values_symbols)
 
-def generate_error_graphic(error_list,equation_string):
+def generate_error_graphic(error_list,equation_string,save_img=False):
 
     plt.plot(error_list)
     plt.xlabel("Iteration")
     plt.ylabel("Error")
     plt.title(equation_string)
+    if save_img: plt.savefig(f'img/error.png')
     plt.grid()
     plt.show()
 
 def my_expression(x,y):
-    return 3*x**2+2*(y-3)**2
-#return -1/((x**2+y**2+1)**(1/2))+2.71**(-x**2-y**2)
+    return -1/((x**2+y**2+1)**(1/2))+2.71**(-x**2-y**2)
+#return 3*x**2+2*(y-3)**2
 
 def generate_2d_graphic(dot_list,equation,symbols,equation_in_string,save_img=False,range_print=1):
 
@@ -79,6 +80,7 @@ def generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img=Fa
     #ax.contour(x, y, z, 30, cmap='viridis', linestyles='solid')  # Níveis no plano Z = -1
 
     ax.set_title(equation_in_string)
+#    ax.set_title(r"$-\frac{1}{\sqrt{x^2 + y^2 + 1}} + e^{-x^2 - y^2}$")
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
