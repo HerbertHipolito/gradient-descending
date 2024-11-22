@@ -1,3 +1,4 @@
+import numexpr as ne
 from sympy import symbols, sympify, latex   
 import matplotlib.pyplot as plt
 import numpy as np
@@ -38,10 +39,6 @@ def generate_error_graphic(error_list,equation_string,save_img=False):
     plt.grid()
     plt.show()
 
-def my_expression(x,y):
-    return -1/((x**2+y**2+1)**(1/2))+2.71**(-x**2-y**2)
-#return 3*x**2+2*(y-3)**2
-
 def generate_2d_graphic(dot_list,equation,symbols,equation_in_string,save_img=False,range_print=1):
 
     last_element = float(dot_list[-1][0])
@@ -63,14 +60,10 @@ def generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img=Fa
     y = np.linspace(last_element_y-range_print, last_element_y+range_print, len(dot_list))
     x, y = np.meshgrid(x, y)
 
-    z = my_expression(x,y)
+    def evaluate_function(x,y):
+        return ne.evaluate(equation_in_string)
 
-    z_string = to_string(my_expression)
-
-    if z_string.split('return ')[-1] != equation_in_string:
-        print(z_string.split('return ')[-1])
-        print(equation_in_string)
-        raise Exception('Equation in generate_3d_graphic not adjusted, change the equation in my_expression function')
+    z = evaluate_function(x,y)
 
     #3d graphic
     fig = plt.figure()
@@ -88,21 +81,6 @@ def generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img=Fa
     if save_img: plt.savefig(f'img/3d.png')
     plt.show()
 
-    """
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    ax.plot([i[0] for i in dot_list], [i[1] for i in dot_list], 'xr')
-    #ax.plot_surface(x,y,z,cmap='coolwarm', alpha=0.6)
-    ax.contourf(x, y, z, 50, cmap='viridis', linestyles='solid')  
-
-    ax.set_title(equation_in_string)
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.legend()
-    if save_img: plt.savefig(f'img/3d_niveis.png')
-    plt.show()
-    """
-
 def generate_countour_line_graphic(dot_list,equation,symbols,equation_in_string,save_img=False,range_print=1): 
     
     last_element_x = float(dot_list[-1][0])
@@ -112,22 +90,17 @@ def generate_countour_line_graphic(dot_list,equation,symbols,equation_in_string,
     y = np.linspace(last_element_y-range_print, last_element_y+range_print, len(dot_list))
     x, y = np.meshgrid(x, y)
 
-    z = my_expression(x,y)
+    def evaluate_function(x,y):
+        return ne.evaluate(equation_in_string)
 
-    z_string = to_string(my_expression)
-
-    if z_string.split('return ')[-1] != equation_in_string:
-        print(z_string.split('return ')[-1])
-        print(equation_in_string)
-        raise Exception('Equation in generate_3d_graphic not adjusted, change the equation in my_expression function')
-
+    z = evaluate_function(x,y)
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.plot([i[0] for i in dot_list], [i[1] for i in dot_list], 'xr')
     #ax.plot_surface(x,y,z,cmap='coolwarm', alpha=0.6)
     ax.contourf(x, y, z, 50, cmap='viridis', linestyles='solid')  
 
-    ax.set_title(equation_in_string)
+    ax.set_title(equation_in_string) 
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.legend()

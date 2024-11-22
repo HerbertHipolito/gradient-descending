@@ -1,4 +1,4 @@
-from utils import create_function, get_value, generate_error_graphic, generate_2d_graphic, generate_3d_graphic, generate_gif_linear_regression
+from utils import create_function, get_value, generate_error_graphic, generate_2d_graphic, generate_3d_graphic, generate_gif_linear_regression, generate_countour_line_graphic
 from gradient_descent import gradient_descent
 import numpy as np
 import matplotlib.pyplot as plt
@@ -12,17 +12,22 @@ equation_in_string = equation_in_string[:-1]
 
 print(equation_in_string)
 
-initial_dot, range_print, learning_rate, expected_error = [5,5], 1, 0.01, 0.0001
-max_iteration, create_gif = 400, True
+initial_dot, range_print, learning_rate, expected_error = [5,5], 6, 0.01, 0.0001
+max_iteration, create_gif, create_3d_graphic = 400, False, True
+save_img, countour_line_graphic = False, True
 
 equation, symbols = create_function(equation_in_string)
 print(symbols)
 
 dot_list, error_list = gradient_descent(equation, symbols, learning_rate=learning_rate , initial_dot=initial_dot, expected_error=expected_error, max_iteration=max_iteration)
 
-#generate_error_graphic(error_list,equation)
+generate_error_graphic(error_list,equation)
 
 print(f"coeficient a:{dot_list[-1][0]}\ncoeficient b:{dot_list[-1][1]}")
 
 if create_gif:
     generate_gif_linear_regression(regression_dots,dot_list)
+if create_3d_graphic:
+    generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img,range_print)
+    if countour_line_graphic:
+        generate_countour_line_graphic(dot_list,equation,symbols,equation_in_string,save_img,range_print)

@@ -3,8 +3,6 @@ from gradient_descent import gradient_descent
 import numpy as np
 import matplotlib.pyplot as plt
 
-# if the function has 2 variables, you need to place the function again in my_expression function.
-
 #equation_in_string = "3*x**2+2*(y-3)**2"
 equation_in_string = "-1/((x**2+y**2+1)**(1/2))+2.71**(-x**2-y**2)"
 #equation_in_string  = "x**2-3*x" one variable(x), change the initial_dot
