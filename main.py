@@ -4,10 +4,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #equation_in_string = "3*x**2+2*(y-3)**2"
-equation_in_string = "-1/((x**2+y**2+1)**(1/2))+2.71**(-x**2-y**2)"
-#equation_in_string  = "x**2-3*x" one variable(x), change the initial_dot
+#equation_in_string = "-1/((x**2+y**2+1)**(1/2))+2.71**(-x**2-y**2)"
+equation_in_string  = "x**2-3*x" # one variable(x), change the initial_dot
 
-initial_dot, range_print = [0,0], 2
+initial_dot, range_print = None, 2
 save_img, countour_line_graphic = True, True
 learning_rate, expected_error = 0.1, 0.0001 
 

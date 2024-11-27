@@ -42,7 +42,11 @@ def generate_error_graphic(error_list,equation_string,save_img=False):
 def generate_2d_graphic(dot_list,equation,symbols,equation_in_string,save_img=False,range_print=1):
 
     last_element = float(dot_list[-1][0])
-    x=np.linspace(last_element-range_print, last_element+range_print,100)
+    first_element = float(dot_list[0][0])
+
+    dif = abs(last_element-first_element)
+
+    x=np.linspace(last_element-dif, last_element+dif,100)
 
     plt.plot(x,[get_value( [i], equation, symbols) for i in x])
     plt.plot(dot_list,[get_value( i, equation, symbols) for i in dot_list],'xr')
@@ -51,13 +55,17 @@ def generate_2d_graphic(dot_list,equation,symbols,equation_in_string,save_img=Fa
     if save_img: plt.savefig(f'img/2d.png')
     plt.show()
 
-def generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img=False,range_print=1):
+def generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img=False,range_print=1,x_label='x',y_label='y'):
 
     last_element_x = float(dot_list[-1][0])
     last_element_y = float(dot_list[-1][1])
+    first_element_x = float(dot_list[0][0])
+    first_element_y = float(dot_list[0][1])
 
-    x = np.linspace(last_element_x-range_print, last_element_x+range_print, len(dot_list))
-    y = np.linspace(last_element_y-range_print, last_element_y+range_print, len(dot_list))
+    dif_x, dif_y = abs(last_element_x-first_element_x), abs(last_element_y-first_element_y)
+
+    x = np.linspace(last_element_x-dif_x, last_element_x+dif_x, len(dot_list))
+    y = np.linspace(last_element_y-dif_y, last_element_y+dif_y, len(dot_list))
     x, y = np.meshgrid(x, y)
 
     def evaluate_function(x,y):
@@ -65,7 +73,6 @@ def generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img=Fa
 
     z = evaluate_function(x,y)
 
-    #3d graphic
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     ax.plot([i[0] for i in dot_list], [i[1] for i in dot_list], [get_value(i, equation, symbols) for i in dot_list], 'xr')
@@ -73,21 +80,24 @@ def generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img=Fa
     #ax.contour(x, y, z, 30, cmap='viridis', linestyles='solid')  # Níveis no plano Z = -1
 
     ax.set_title(equation_in_string)
-#    ax.set_title(r"$-\frac{1}{\sqrt{x^2 + y^2 + 1}} + e^{-x^2 - y^2}$")
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
     ax.set_zlabel('Z')
     ax.legend()
     if save_img: plt.savefig(f'img/3d.png')
     plt.show()
 
-def generate_countour_line_graphic(dot_list,equation,symbols,equation_in_string,save_img=False,range_print=1): 
+def generate_countour_line_graphic(dot_list,equation,symbols,equation_in_string,save_img=False,range_print=1,x_label='x',y_label='y'): 
     
     last_element_x = float(dot_list[-1][0])
     last_element_y = float(dot_list[-1][1])
+    first_element_x = float(dot_list[0][0])
+    first_element_y = float(dot_list[0][1])
 
-    x = np.linspace(last_element_x-range_print, last_element_x+range_print, len(dot_list))
-    y = np.linspace(last_element_y-range_print, last_element_y+range_print, len(dot_list))
+    dif_x, dif_y = abs(last_element_x-first_element_x), abs(last_element_y-first_element_y)
+
+    x = np.linspace(last_element_x-dif_x, last_element_x+dif_x, len(dot_list))
+    y = np.linspace(last_element_y-dif_y, last_element_y+dif_y, len(dot_list))
     x, y = np.meshgrid(x, y)
 
     def evaluate_function(x,y):
@@ -97,12 +107,12 @@ def generate_countour_line_graphic(dot_list,equation,symbols,equation_in_string,
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.plot([i[0] for i in dot_list], [i[1] for i in dot_list], 'xr')
-    #ax.plot_surface(x,y,z,cmap='coolwarm', alpha=0.6)
-    ax.contourf(x, y, z, 50, cmap='viridis', linestyles='solid')  
+    #ax.contourf(x, y, z, 50, cmap='viridis', linestyles='solid')  
+    ax.contourf(x, y, z, 50, cmap='coolwarm', linestyles='solid')  
 
     ax.set_title(equation_in_string) 
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
     ax.legend()
     if save_img: plt.savefig(f'img/3d_niveis.png')
     plt.show()

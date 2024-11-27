@@ -28,6 +28,6 @@ print(f"coeficient a:{dot_list[-1][0]}\ncoeficient b:{dot_list[-1][1]}")
 if create_gif:
     generate_gif_linear_regression(regression_dots,dot_list)
 if create_3d_graphic:
-    generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img,range_print)
+    generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img,range_print,x_label='a',y_label='b')
     if countour_line_graphic:
-        generate_countour_line_graphic(dot_list,equation,symbols,equation_in_string,save_img,range_print)
+        generate_countour_line_graphic(dot_list,equation,symbols,equation_in_string,save_img,range_print,x_label='a',y_label='b')
