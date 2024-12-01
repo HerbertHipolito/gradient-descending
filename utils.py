@@ -87,7 +87,7 @@ def generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img=Fa
     if save_img: plt.savefig(f'img/3d.png')
     plt.show()
 
-def generate_countour_line_graphic(dot_list,equation,symbols,equation_in_string,save_img=False,range_print=1,x_label='x',y_label='y'): 
+def generate_countour_line_graphic(dot_list,equation,symbols,equation_in_string,save_img=False,range_print=1,x_label='x',y_label='y',create_line_connecting_dots=False): 
     
     last_element_x = float(dot_list[-1][0])
     last_element_y = float(dot_list[-1][1])
@@ -109,7 +109,7 @@ def generate_countour_line_graphic(dot_list,equation,symbols,equation_in_string,
     ax.plot([i[0] for i in dot_list], [i[1] for i in dot_list], 'xr')
     #ax.contourf(x, y, z, 50, cmap='viridis', linestyles='solid')  
     ax.contourf(x, y, z, 50, cmap='coolwarm', linestyles='solid')  
-
+    for i in range(len(dot_list)-1):ax.plot([dot_list[i][0],dot_list[i+1][0]],[dot_list[i][1],dot_list[i+1][1]])
     ax.set_title(equation_in_string) 
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)

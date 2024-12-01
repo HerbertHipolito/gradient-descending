@@ -2,13 +2,13 @@ import random
 from utils import create_function, get_value, product_vector
 import numpy as np
 
-def gradient_descent(equation, symbols, learning_rate, expected_error = 0.01, max_iteration = 100, stop_type = 1, initial_dot=None):
+def gradient_descent(equation, symbols, learning_rate, expected_error = 0.01, max_iteration = 100, stop_type = 1, initial_dot=None, momentum = 0.5):
 
     error, dot_list, error_list = 9999999999, [], []
-    current_iteration = 1
+    current_iteration, previous_gradient = 1, 0
 
     if initial_dot is None:
-        x = [random.randint(0,1000) for _ in range(len(symbols))]
+        x = [random.randint(0,10) for _ in range(len(symbols))]
     else:
         x = initial_dot
     
@@ -17,15 +17,13 @@ def gradient_descent(equation, symbols, learning_rate, expected_error = 0.01, ma
         print(f"\nIteration: {current_iteration}")
         print(f"x:{x}")
         
-        previous_x = x.copy()
-
         f_x = get_value(x, equation, symbols)
 
         current_iteration += 1
 
         gradient = calculate_gradient(equation, x, symbols)
 
-        x -= learning_rate*gradient  
+        x -= (learning_rate*gradient + learning_rate*momentum*previous_gradient)
 
         new_f_x = get_value(x, equation, symbols)   
         error = abs((new_f_x-f_x)/f_x)
@@ -40,6 +38,8 @@ def gradient_descent(equation, symbols, learning_rate, expected_error = 0.01, ma
         if error < expected_error:
             print('Reach out convergence')
             break
+
+        previous_gradient = gradient
 
     if current_iteration >= max_iteration: print('Max Iteration')
 
