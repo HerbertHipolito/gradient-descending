@@ -75,7 +75,7 @@ def generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img=Fa
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    ax.plot([i[0] for i in dot_list], [i[1] for i in dot_list], [get_value(i, equation, symbols) for i in dot_list], 'xr')
+    ax.plot([i[0] for i in dot_list], [i[1] for i in dot_list], [get_value(i, equation, symbols) for i in dot_list])
     ax.plot_surface(x,y,z,cmap='coolwarm', alpha=0.6)
     #ax.contour(x, y, z, 30, cmap='viridis', linestyles='solid')  # Níveis no plano Z = -1
 
@@ -87,8 +87,8 @@ def generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img=Fa
     if save_img: plt.savefig(f'img/3d.png')
     plt.show()
 
-def generate_countour_line_graphic(dot_list,equation,symbols,equation_in_string,save_img=False,range_print=1,x_label='x',y_label='y',create_line_connecting_dots=False): 
-    
+def generate_3d_gif(dot_list,equation,symbols,equation_in_string,range_print=1,x_label='x',y_label='y'):
+
     last_element_x = float(dot_list[-1][0])
     last_element_y = float(dot_list[-1][1])
     first_element_x = float(dot_list[0][0])
@@ -98,6 +98,54 @@ def generate_countour_line_graphic(dot_list,equation,symbols,equation_in_string,
 
     x = np.linspace(last_element_x-dif_x, last_element_x+dif_x, len(dot_list))
     y = np.linspace(last_element_y-dif_y, last_element_y+dif_y, len(dot_list))
+    x, y = np.meshgrid(x, y)
+
+    def evaluate_function(x,y):
+        return ne.evaluate(equation_in_string)
+
+    z, frames, j = evaluate_function(x,y), [], 1 
+
+    for dot in tqdm(dot_list):
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot([i[0] for i in dot_list[0:j]], [i[1] for i in dot_list[0:j]], [get_value(i, equation, symbols) for i in dot_list[0:j]])
+        ax.plot(dot[0], dot[1], get_value(dot, equation, symbols),'ob')
+        ax.plot_surface(x,y,z,cmap='coolwarm', alpha=0.6)
+        #ax.contour(x, y, z, 30, cmap='viridis', linestyles='solid')  # Níveis no plano Z = -1
+
+        ax.set_title(equation_in_string)
+        ax.set_xlabel(x_label)
+        ax.set_ylabel(y_label)
+        ax.set_zlabel('Z')
+        ax.view_init(elev=34, azim=-39,roll=0)
+        ax.legend()
+
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        frames.append(imageio.imread(buffer))  
+
+        buffer.close()  
+        plt.close()
+        j+=1
+
+    print('Graficos criados.')
+    print('Criando animação.')
+    imageio.mimsave('./gif/3d.gif', frames, duration=0.2, loop=0) 
+    print('Animação criada.')
+
+def generate_countour_line_graphic(dot_list,equation,symbols,equation_in_string,save_img=False,range_print=1,x_label='x',y_label='y',create_line_connecting_dots=False): 
+    
+    last_element_x = float(dot_list[-1][0])
+    last_element_y = float(dot_list[-1][1])
+    first_element_x = float(dot_list[0][0])
+    first_element_y = float(dot_list[0][1])
+
+    dif_x, dif_y = abs(last_element_x-first_element_x), abs(last_element_y-first_element_y)
+
+    x = np.linspace(last_element_x-dif_x-1, last_element_x+dif_x+1, len(dot_list))
+    y = np.linspace(last_element_y-dif_y-1, last_element_y+dif_y+1, len(dot_list))
     x, y = np.meshgrid(x, y)
 
     def evaluate_function(x,y):
@@ -179,5 +227,5 @@ def generate_gif_linear_regression(regression_dots,dot_list):
 
     print('Graficos criados.')
     print('Criando animação.')
-    imageio.mimsave('linear_regression.gif', frames, duration=0.2, loop=0) 
+    imageio.mimsave('./gif/linear_regression.gif', frames, duration=0.2, loop=0) 
     print('Animação criada.')
