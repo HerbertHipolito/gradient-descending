@@ -14,14 +14,14 @@ print(settings)
 
 equation, symbols = create_function(settings["equation_in_string"])
 
-dot_list, error_list = gradient_descent(equation, symbols, learning_rate=settings["learning_rate"], initial_dot=settings["initial_dot"], expected_error=settings["expected_error"], momentum=settings["momentum"])
+dot_list, error_list = gradient_descent(equation, symbols, learning_rate=settings["learning_rate"], initial_dot=settings["initial_dot"], expected_error=settings["expected_error"], momentum=settings["momentum"],max_iteration=settings["max_iteration"])
 
 generate_error_graphic(error_list,equation,settings['save_img'])
 
 if len(symbols) == 1:
     generate_2d_graphic(dot_list,equation,symbols,settings["equation_in_string"],settings["save_img"],settings["range_print"])
 if len(symbols) == 2:
-    generate_3d_graphic(dot_list,equation,symbols,settings["equation_in_string"],settings["save_img"],settings["range_print"])
+    generate_3d_graphic(dot_list,equation,symbols,settings["equation_in_string"],settings["save_img"],settings["range_print"],red_x_instead_of_line=settings["red_x_instead_of_line"])
     if settings["countour_line_graphic"]:
         generate_countour_line_graphic(dot_list,equation,symbols,settings["equation_in_string"],settings["save_img"],settings["range_print"],settings["create_line_connecting_dots"])
 if settings["generate_3d_gif_condition"]:

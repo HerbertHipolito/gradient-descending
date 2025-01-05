@@ -1,12 +1,14 @@
 {
     "equation_in_string":"-1/((x**2+y**2+1)**(1/2))+2.71**(-x**2-y**2)",
-    "initial_dot":[1,1],
+    "initial_dot":[0,0],
     "range_print":2,
     "momentum":0.5,
+    "red_x_instead_of_line":false,
+    "max_iteration":200,
     "generate_3d_gif_condition":true,
     "save_img":false,
     "countour_line_graphic":false,
     "create_line_connecting_dots":false,
-    "learning_rate":0.01,
+    "learning_rate":0.1,
     "expected_error":0.0001
 }

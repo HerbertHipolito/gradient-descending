@@ -55,7 +55,7 @@ def generate_2d_graphic(dot_list,equation,symbols,equation_in_string,save_img=Fa
     if save_img: plt.savefig(f'img/2d.png')
     plt.show()
 
-def generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img=False,range_print=1,x_label='x',y_label='y'):
+def generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img=False,range_print=1,x_label='x',y_label='y',red_x_instead_of_line=True):
 
     last_element_x = float(dot_list[-1][0])
     last_element_y = float(dot_list[-1][1])
@@ -75,7 +75,7 @@ def generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img=Fa
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    ax.plot([i[0] for i in dot_list], [i[1] for i in dot_list], [get_value(i, equation, symbols) for i in dot_list])
+    ax.plot([i[0] for i in dot_list], [i[1] for i in dot_list], [get_value(i, equation, symbols) for i in dot_list], 'b' if red_x_instead_of_line else 'xr')
     ax.plot_surface(x,y,z,cmap='coolwarm', alpha=0.6)
     #ax.contour(x, y, z, 30, cmap='viridis', linestyles='solid')  # Níveis no plano Z = -1
 
