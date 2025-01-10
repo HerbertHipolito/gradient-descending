@@ -55,6 +55,31 @@ def generate_2d_graphic(dot_list,equation,symbols,equation_in_string,save_img=Fa
     if save_img: plt.savefig(f'img/2d.png')
     plt.show()
 
+def get_longest_model(dot_dict):
+
+    max_len, longest_model_parameters = 0, ""
+
+    for key in dot_dict.keys():
+
+        current_len = len(dot_dict[key]["dot_list"])
+
+        if current_len > max_len:
+            max_len = current_len
+            longest_model_parameters = key
+    
+    return max_len, longest_model_parameters
+
+def make_same_length_dot_dict(dot_dict, max_len):
+
+    for key in dot_dict:
+        
+        dif = max_len - len(dot_dict[key]["dot_list"])
+        if dif > 0:
+            last_element = dot_dict[key]["dot_list"][-1]
+            for _ in range(dif): dot_dict[key]["dot_list"].append(last_element)
+    
+    return dot_dict
+
 def generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img=False,range_print=1,x_label='x',y_label='y',red_x_instead_of_line=True):
 
     last_element_x = float(dot_list[-1][0])
@@ -87,14 +112,44 @@ def generate_3d_graphic(dot_list,equation,symbols,equation_in_string,save_img=Fa
     if save_img: plt.savefig(f'img/3d.png')
     plt.show()
 
-def generate_3d_gif(dot_list,equation,symbols,equation_in_string,range_print=1,x_label='x',y_label='y'):
+def longest_dif_x_dif_y(dot_dict):
 
-    last_element_x = float(dot_list[-1][0])
-    last_element_y = float(dot_list[-1][1])
-    first_element_x = float(dot_list[0][0])
-    first_element_y = float(dot_list[0][1])
+    max_dif_x, max_dif_y = 0, 0
+    max_last_element_x,  max_last_element_y = 0, 0
 
-    dif_x, dif_y = abs(last_element_x-first_element_x), abs(last_element_y-first_element_y)
+    for key in dot_dict.keys():
+
+        last_element_x = float(dot_dict[key]["dot_list"][-1][0])
+        last_element_y = float(dot_dict[key]["dot_list"][-1][1])
+        first_element_x = float(dot_dict[key]["dot_list"][0][0])
+        first_element_y = float(dot_dict[key]["dot_list"][0][1])
+
+        dif_x, dif_y = abs(last_element_x-first_element_x), abs(last_element_y-first_element_y)
+
+        if dif_x > max_dif_x: 
+            max_dif_x = dif_x
+            max_last_element_x = last_element_x
+        if dif_y > max_dif_y: 
+            max_dif_y = dif_y
+            max_last_element_y = last_element_y
+    
+    return max_dif_x, max_dif_y, last_element_x, last_element_y
+
+def generate_3d_gif(dot_dict,equation,symbols,equation_in_string,range_print=1,x_label='x',y_label='y'):
+
+    max_len, longest_model_parameters = get_longest_model(dot_dict)
+    dot_list = dot_dict[longest_model_parameters]["dot_list"]
+
+    dot_dict = make_same_length_dot_dict(dot_dict, max_len)
+
+    dif_x, dif_y, last_element_x, last_element_y = longest_dif_x_dif_y(dot_dict)
+
+    #last_element_x = float(dot_list[-1][0])
+    #last_element_y = float(dot_list[-1][1])
+    #first_element_x = float(dot_list[0][0])
+    #first_element_y = float(dot_list[0][1])
+
+    #dif_x, dif_y = abs(last_element_x-first_element_x), abs(last_element_y-first_element_y)
 
     x = np.linspace(last_element_x-dif_x, last_element_x+dif_x, len(dot_list))
     y = np.linspace(last_element_y-dif_y, last_element_y+dif_y, len(dot_list))
@@ -109,8 +164,13 @@ def generate_3d_gif(dot_list,equation,symbols,equation_in_string,range_print=1,x
 
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
-        ax.plot([i[0] for i in dot_list[0:j]], [i[1] for i in dot_list[0:j]], [get_value(i, equation, symbols) for i in dot_list[0:j]])
-        ax.plot(dot[0], dot[1], get_value(dot, equation, symbols),'ob')
+        #ax.plot([i[0] for i in dot_list[0:j]], [i[1] for i in dot_list[0:j]], [get_value(i, equation, symbols) for i in dot_list[0:j]])
+        #ax.plot(dot[0], dot[1], get_value(dot, equation, symbols),'ob')
+
+        for key in dot_dict.keys():
+            ax.plot([i[0] for i in dot_dict[key]["dot_list"][0:j]], [i[1] for i in dot_dict[key]["dot_list"][0:j]], [get_value(i, equation, symbols) for i in dot_dict[key]["dot_list"][0:j]],label=f"LR:{dot_dict[key]["parameters"][0]} M: {dot_dict[key]["parameters"][1]}")
+            ax.plot(dot_dict[key]["dot_list"][j-1][0], dot_dict[key]["dot_list"][j-1][1], get_value(dot_dict[key]["dot_list"][j-1], equation, symbols),'ob')
+
         ax.plot_surface(x,y,z,cmap='coolwarm', alpha=0.6)
         #ax.contour(x, y, z, 30, cmap='viridis', linestyles='solid')  # Níveis no plano Z = -1
 

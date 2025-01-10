@@ -2,7 +2,20 @@ import random
 from utils import create_function, get_value, product_vector
 import numpy as np
 
-def gradient_descent(equation, symbols, learning_rate, expected_error = 0.01, max_iteration = 100, stop_type = 1, initial_dot=None, momentum = 0.5):
+
+def gradient_descent_multi_exec(equation, symbols, learning_rate,momentum, initial_dot, expected_error,max_iteration):
+
+    dot_dict = {str(i)+'_'+str(j):{"parameters":(i,j)} for i in learning_rate for j in momentum}
+
+    for key in dot_dict.keys():
+        print(f"\n Learning rate: {dot_dict[key]['parameters'][0]} Momentum: {dot_dict[key]['parameters'][1]} \n")
+        dot_list, error_list = gradient_descent(equation, symbols,learning_rate=dot_dict[key]['parameters'][0], momentum=dot_dict[key]['parameters'][1], initial_dot=initial_dot, max_iteration=max_iteration)
+        dot_dict[key]['dot_list'] = dot_list
+        dot_dict[key]['error'] = error_list
+
+    return dot_dict
+
+def gradient_descent(equation, symbols, learning_rate, expected_error = 0.01, max_iteration = 100, stop_type = 1, initial_dot=None, momentum = 0.0):
 
     error, dot_list, error_list = 9999999999, [], []
     current_iteration, previous_gradient = 1, 0

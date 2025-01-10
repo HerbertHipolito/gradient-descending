@@ -33,4 +33,4 @@ if settings["create_3d_graphic"]:
     if settings["countour_line_graphic"]:
         generate_countour_line_graphic(dot_list,equation,symbols,equation_in_string,settings["save_img"],settings["range_print"],x_label='a',y_label='b')
 if settings["generate_3d_gif_condition"]:
-    generate_3d_gif(dot_list,equation,symbols,equation_in_string,range_print=settings["range_print"])
+    generate_3d_gif(dot_dict,equation,symbols,equation_in_string,range_print=settings["range_print"])

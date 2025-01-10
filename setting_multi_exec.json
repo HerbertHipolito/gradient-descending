@@ -1,0 +1,15 @@
+{
+    "equation_in_string":"(2*x+y-3)**2 + (3*x+y-5)**2 + (5*x+y-8)**2 + (6*x+y-11)**2",
+    "examplo_equation":"-1/((x**2+y**2+1)**(1/2))+2.71**(-x**2-y**2)",
+    "initial_dot":null,
+    "range_print":2,
+    "learning_rate":[0.1,0.01,0.005],
+    "momentum":[0.5,0],
+    "red_x_instead_of_line":false,
+    "max_iteration":300,
+    "generate_3d_gif_condition":true,
+    "save_img":false,
+    "countour_line_graphic":false,
+    "create_line_connecting_dots":false,
+    "expected_error":0.0001
+}
