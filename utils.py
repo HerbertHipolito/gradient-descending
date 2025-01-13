@@ -262,16 +262,17 @@ def generate_residuo_graphic(residuo_dict, dot_list, gradient_descent):
     estimated_b = dot_list[-1][1]
     
     plt.plot(residuos_real_plus_equation,'ob')
-    plt.plot([get_value([i],equation, symbols) for i in x],label="real")
-    plt.plot([regression(i,estimated_a,estimated_b) for i in x],label="estimation")
+    plt.plot([get_value([i],equation, symbols) for i in x],"red",label="real")
+    plt.plot([regression(i,estimated_a,estimated_b) for i in x],"black",label="estimado")
     plt.legend()
+    plt.grid()
     plt.show()
-
+    estimated_residuos = [float(residuos_real_plus_equation[i] - regression(i,estimated_a,estimated_b)) for i in range(len(residuos_real_plus_equation)) ]
     sns.kdeplot(residuos_real,label="real")
-#    sns.kdeplot([residuos_real_plus_equation[i] - regression(i,estimated_a,estimated_b) for i in range(len(residuos_real_plus_equation)) ],label="estimation")
+    sns.kdeplot(estimated_residuos,label="estimado")
+    plt.grid()
     plt.legend()
     plt.show()
-    print([residuos_real_plus_equation[i] - regression(i,estimated_a,estimated_b) for i in range(len(residuos_real_plus_equation)) ])
 
 def regression(x,a,b):
     return a * x + b

@@ -5,7 +5,7 @@
     "learning_rate":0.01,
     "momentum":0,
     "expected_error":0.0001,
-    "max_iteration":100,
+    "max_iteration":10,
     "create_gif":false,
     "create_3d_graphic":false,
     "save_img":false,
@@ -15,13 +15,13 @@
         "condition":true,
         "qtd_random_dots":300,
         "equation":"2*x+3",
-        "range_x":[0,80],
+        "range_x":[0,60],
         "normal_distribution_mean":0,
         "normal_distribution_dp":1,
-        "learning_rate":0.0001,
-        "momentum":0,
+        "learning_rate":0.005,
+        "momentum":0.5,
         "initial_dot": null,
-        "max_iteration":100
+        "max_iteration":800
     },
     "error_graphic":false,
     "comparation":true
