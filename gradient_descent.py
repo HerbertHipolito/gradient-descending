@@ -15,7 +15,7 @@ def gradient_descent_multi_exec(equation, symbols, learning_rate,momentum, initi
 
     return dot_dict
 
-def gradient_descent(equation, symbols, learning_rate, expected_error = 0.01, max_iteration = 100, stop_type = 1, initial_dot=None, momentum = 0.0):
+def gradient_descent(equation, symbols, learning_rate, expected_error = 0.0001, max_iteration = 100, stop_type = 1, initial_dot=None, momentum = 0.0):
 
     error, dot_list, error_list = 9999999999, [], []
     current_iteration, previous_gradient = 1, 0

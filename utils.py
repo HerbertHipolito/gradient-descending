@@ -8,6 +8,7 @@ import inspect
 import imageio
 from io import BytesIO
 from tqdm import tqdm
+import seaborn as sns
 
 def create_function(expressao_str):
     variaveis = sorted({char for char in expressao_str if char.isalpha()})
@@ -137,19 +138,21 @@ def longest_dif_x_dif_y(dot_dict):
 
 def generate_3d_gif(dot_dict,equation,symbols,equation_in_string,range_print=1,x_label='x',y_label='y'):
 
-    max_len, longest_model_parameters = get_longest_model(dot_dict)
-    dot_list = dot_dict[longest_model_parameters]["dot_list"]
+    if isinstance(dot_dict,dict):
+        max_len, longest_model_parameters = get_longest_model(dot_dict)
+        dot_list = dot_dict[longest_model_parameters]["dot_list"]
 
-    dot_dict = make_same_length_dot_dict(dot_dict, max_len)
+        dot_dict = make_same_length_dot_dict(dot_dict, max_len)
 
-    dif_x, dif_y, last_element_x, last_element_y = longest_dif_x_dif_y(dot_dict)
+        dif_x, dif_y, last_element_x, last_element_y = longest_dif_x_dif_y(dot_dict)
+    else:
+        dot_list = dot_dict
+        last_element_x = float(dot_list[-1][0])
+        last_element_y = float(dot_list[-1][1])
+        first_element_x = float(dot_list[0][0])
+        first_element_y = float(dot_list[0][1])
 
-    #last_element_x = float(dot_list[-1][0])
-    #last_element_y = float(dot_list[-1][1])
-    #first_element_x = float(dot_list[0][0])
-    #first_element_y = float(dot_list[0][1])
-
-    #dif_x, dif_y = abs(last_element_x-first_element_x), abs(last_element_y-first_element_y)
+        dif_x, dif_y = abs(last_element_x-first_element_x), abs(last_element_y-first_element_y)
 
     x = np.linspace(last_element_x-dif_x, last_element_x+dif_x, len(dot_list))
     y = np.linspace(last_element_y-dif_y, last_element_y+dif_y, len(dot_list))
@@ -236,6 +239,40 @@ def product_vector(v1,v2):
 def to_string(expression):
     return inspect.getsource(expression).strip()
 
+def generate_residuo_graphic(residuo_dict, dot_list, gradient_descent):
+
+    x = list(range(residuo_dict["range_x"][0],residuo_dict["range_x"][1],1))
+    residuos_real = [np.random.normal(residuo_dict["normal_distribution_mean"],residuo_dict["normal_distribution_dp"]) for _ in range(len(x))]
+
+    equation, symbols = create_function(residuo_dict["equation"])
+
+    residuos_real_plus_equation = [residuos_real[i]+get_value([i],equation, symbols) for i in x]
+
+    estimated_equation = ""
+
+    for i in x:
+        estimated_equation += f"((x*{i}+y-{residuos_real_plus_equation[i]})**2)**(1/2)+"
+    print(estimated_equation)
+    estimated_equation = estimated_equation[:-1] 
+    
+    estimated_equation, estimated_symbols = create_function(estimated_equation)   
+    dot_list, error_list = gradient_descent(estimated_equation, estimated_symbols, learning_rate=residuo_dict["learning_rate"], momentum=residuo_dict["momentum"], initial_dot=residuo_dict["initial_dot"],max_iteration=residuo_dict["max_iteration"])
+    
+    estimated_a = dot_list[-1][0]
+    estimated_b = dot_list[-1][1]
+    
+    plt.plot(residuos_real_plus_equation,'ob')
+    plt.plot([get_value([i],equation, symbols) for i in x],label="real")
+    plt.plot([regression(i,estimated_a,estimated_b) for i in x],label="estimation")
+    plt.legend()
+    plt.show()
+
+    sns.kdeplot(residuos_real,label="real")
+#    sns.kdeplot([residuos_real_plus_equation[i] - regression(i,estimated_a,estimated_b) for i in range(len(residuos_real_plus_equation)) ],label="estimation")
+    plt.legend()
+    plt.show()
+    print([residuos_real_plus_equation[i] - regression(i,estimated_a,estimated_b) for i in range(len(residuos_real_plus_equation)) ])
+
 def regression(x,a,b):
     return a * x + b
 
@@ -253,6 +290,28 @@ def linear_regression(regression_dots):
     y_reta = regression(x_reta,a,b)
 
     return x_reta, y_reta, x, y, a, b
+def generate_img_linear_regression(regression_dots,dot_list):
+    
+    x_reta, y_reta, x, y, a, b = linear_regression(regression_dots)
+
+    a_gradient = dot_list[-1][0]
+    b_gradient = dot_list[-1][1]
+    y_reta_gradient = regression(x_reta,a_gradient,b_gradient)
+
+    plt.figure(figsize=(8, 6))
+    plt.grid()
+    plt.scatter(x, y, color='blue', label='Pontos Dados')
+    plt.plot(x_reta, y_reta, color='red', label=f'Reta de Regressão: y = {a:.2f}x + {b:.2f}')
+    for i in range(len(regression_dots)):
+        plt.plot([regression_dots[i][0],regression_dots[i][0]],[regression_dots[i][1],regression(regression_dots[i][0],a_gradient,b_gradient)],'g--')
+        plt.plot([regression_dots[i][0],regression_dots[i][0]],[regression_dots[i][1],regression(regression_dots[i][0],a,b)],'r--')
+    plt.plot(x_reta, y_reta_gradient, color='green', label=f' Aproxi. da Reta de Regressão: y = {a_gradient:.2f}x + {b_gradient:.2f}') 
+    plt.title('Reta de Regressão')
+    plt.xlabel('X')
+    plt.ylabel('Y')
+    plt.legend()
+    plt.savefig("./img/linear_regression_comparison.png", format='png')
+    plt.close()
 
 def generate_gif_linear_regression(regression_dots,dot_list):
     

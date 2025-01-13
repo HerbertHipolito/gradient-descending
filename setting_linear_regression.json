@@ -2,13 +2,27 @@
     "regression_dots":[[2,3],[3,5],[5,8],[6,11]],
     "initial_dot":[5,5],
     "range_print":6,
-    "learning_rate":0.1,
+    "learning_rate":0.01,
     "momentum":0,
     "expected_error":0.0001,
-    "max_iteration":400,
+    "max_iteration":100,
     "create_gif":false,
     "create_3d_graphic":false,
     "save_img":false,
     "countour_line_graphic":false,
-    "generate_3d_gif_condition":false
+    "generate_3d_gif_condition":false,
+    "residuos":{
+        "condition":true,
+        "qtd_random_dots":300,
+        "equation":"2*x+3",
+        "range_x":[0,80],
+        "normal_distribution_mean":0,
+        "normal_distribution_dp":1,
+        "learning_rate":0.0001,
+        "momentum":0,
+        "initial_dot": null,
+        "max_iteration":100
+    },
+    "error_graphic":false,
+    "comparation":true
 }
